@@ -1,0 +1,18 @@
+//@version=5
+strategy("XRP Sunday Buy - Thursday Sell Strategy", overlay=true, initial_capital=1000, default_qty_type=strategy.percent_of_equity, default_qty_value=100)
+
+// Identify day of week
+isSunday = (dayofweek == dayofweek.sunday)
+isThursday = (dayofweek == dayofweek.thursday)
+
+// Entry: On Sunday open, if no existing position, enter long
+if (isSunday and strategy.position_size == 0)
+    strategy.entry("Long", strategy.long)
+
+// Exit: On Thursday close, if in position, exit long
+if (isThursday and strategy.position_size > 0)
+    strategy.close("Long")
+
+// Plot markers for entries and exits
+plotshape(isSunday and strategy.position_size == 0, style=shape.labelup, location=location.belowbar, color=color.green, size=size.tiny, title="Buy Signal", text="Buy")
+plotshape(isThursday and strategy.position_size > 0, style=shape.labeldown, location=location.abovebar, color=color.red, size=size.tiny, title="Sell Signal", text="Sell")
